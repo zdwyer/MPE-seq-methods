@@ -19,9 +19,10 @@ The 2.30 release of the *Schizosaccharomyces pombe* genome was downloaded from [
 ## Data Processing
 
 ### Genome and Annotation Files
-The R64-2-1 release of the *Saccharomyces cerevisiae* genome was downloaded from the [Saccharomyces Genome Database](https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/). The genome sequence was manually removed from the feature file and saved as sc_feature_R64-2-1.gff. The chromosome names of the genome file were manually renamed to match the feature file and saved as sc_genome_R64-2-1.fa.
+The R64-2-1 release of the *Saccharomyces cerevisiae* genome was downloaded from the [Saccharomyces Genome Database](https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/). The genome sequence was manually removed from the feature file and saved as sc_feature_R64-2-1.gff (available in resources). The chromosome names of the genome file were manually renamed to match the feature file and saved as sc_genome_R64-2-1.fa.
 
 #### Build HISAT index:
+Exon and intron ranges were extracted from sc_feature_R64-2-1.gff (available in resources). Hisat indexes were built with intron and exon annotations (indexes available in resources/hisat_index).
 ```
 python sc_extract_exons_for_hisat.py sc_feature_R64-2-1.gff > sc_exons.txt
 python sc_extract_introns_for_hisat.py sc_feature_R64-2-1.gff > sc_introns.txt
@@ -45,19 +46,19 @@ hisat2-build --ss sc_introns.txt --exon sc_exons.txt sc_genome_R64-2-1.fa sc_ind
 
 ### Remove PCR Duplicates [MPE-seq Only]
 ```
-python compress_UMI.py -n 7 -1 sc_MPE_A_R1.fastq.gz -2 sc_MPE_A_R2.fastq.gz > sc_MPE_A.fastq.gz
+python compress_UMI.py -n 7 -1 sc_MPE_A_sub_R1.fastq.gz -2 sc_MPE_A_sub_R2.fastq.gz -o sc_MPE_A_compress.fastq.gz
 ```
 
 ### Trimming
-Reads are trimmed with (Trimmomatic version 0.35) to remove any read through into sequencing adapters which will interfear with alignment. RNA-seq libraries were prepared with TruSeq adapters while MPE-seq libraries were prepared with Nextera adapters. MPE-seq libraries were required to be at least 26 bases long post trimming to remove any reads that come from unextended primers during reverse transcription. TruSeq3-SE.fa and NexteraPE-PE.fa came with Trimmomatic and can additionally be found in the "resources" folder of the project. Example commands:
+Reads are trimmed with Trimmomatic (version 0.35) to remove any read through into sequencing adapters which will interfear with alignment. RNA-seq libraries were prepared with TruSeq adapters while MPE-seq libraries were prepared with Nextera adapters. MPE-seq libraries were required to be at least 26 bases long post trimming to remove any reads that come from unextended primers during reverse transcription. TruSeq3-SE.fa and NexteraPE-PE.fa came with Trimmomatic and can additionally be found in the "resources" folder of the project. Example commands:
 
 #### RNA-seq
 ```
-java -jar trimmomatic.jar SE -phred33 sc_RNA_ds_A.fastq.gz sc_RNA_A_trimmed.fastq.gz ILLUMINACLIP:TruSeq3-SE.fa:2:30:10 MINLEN:10
+java -jar trimmomatic.jar SE -phred33 sc_RNA_sub_A.fastq.gz sc_RNA_A_trimmed.fastq.gz ILLUMINACLIP:TruSeq3-SE.fa:2:30:10 MINLEN:10
 ```
 #### MPE-seq
 ```
-java -jar trimmomatic.jar SE -phred33 sc_MPE_ds_A.fastq.gz sc_MPE_A_trimmed.fastq.gz ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 MINLEN:26
+java -jar trimmomatic.jar SE -phred33 sc_MPE_A_compress.fastq.gz sc_MPE_A_trimmed.fastq.gz ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 MINLEN:26
 ```
 Summary of trimming:
 
@@ -79,11 +80,11 @@ Summary of alignment:
 |----------------|------------|:-------------:|-------------------------|-----------:|--------------:|----------------:|------------------------:|
 | sc_RNA_A       | BY4741     | A             | RNA-seq                 | 4,988,092  | 516,491       | 4,205,157       | 266,444                 |
 | sc_RNA_B       | BY4741     | B             | RNA-seq                 | 4,988,824  | 396,795       | 4,309,588       | 282,441                 |
-| sc_MPE_A       | BY4741     | A             | MPE-seq                 |   |       |       |                 |
-| sc_MPE_B       | BY4741     | B             | MPE-seq                 |   |       |       |                 |
+| sc_MPE_A       | BY4741     | A             | MPE-seq                 | 3,642,108  | 1,235,482     | 2,350,017       | 56,609                  |
+| sc_MPE_B       | BY4741     | B             | MPE-seq                 | 3,465,210  | 1,273,973     | 2,134,673       | 56,564                  |
 
 ### Feature Counting
-Mature alignments and premature reads were counted with a custom script that is based off of HTSeq-count. Mature alignments are those that cross an exon-exon junction. Premature alignments are either across an exon-intron or intron-exon boundary or are completely intronic. Results can be found in the "data" folder of this project.
+Mature alignments and premature reads were counted with a custom script that is based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments are either across an exon-intron or intron-exon boundary or are completely intronic. Results can be found in the "results" folder of this project.
 ```
 python feature_count2.py -i sc_RNA_A.bam -f sc_intron_ranges.bed > sc_RNA_A_counts.txt
 ```
