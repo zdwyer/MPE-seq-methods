@@ -43,7 +43,7 @@ def main(args):
 
 
 
-	print 'Gene\tM\tP'
+	print 'Intron\tMature\tPremature'
 	for intron in sorted(introns):
 		print '%s\t%d\t%d' % (intron, mature[intron], premature[intron])
 
