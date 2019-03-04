@@ -57,29 +57,29 @@ python compress_UMI.py -n 7 -1 sc_MPE_A_ds_R1.fastq.gz -2 sc_MPE_A_sub_R2.fastq.
 ```
 
 ### Trimming
-Reads are trimmed with [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (version 0.35) to remove any read through into sequencing adapters which will interfear with alignment. RNA-seq libraries were prepared with TruSeq adapters while MPE-seq libraries were prepared with Nextera adapters. MPE-seq libraries were required to be at least 26 bases long post trimming to remove any reads that come from unextended primers during reverse transcription. TruSeq3-SE.fa and NexteraPE-PE.fa came with Trimmomatic and can additionally be found in the "resources" folder of the project. Example commands:
+Reads are trimmed with [Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic) (version 0.36) to remove any read through into sequencing adapters which will interfear with alignment. RNA-seq libraries were prepared with TruSeq adapters while MPE-seq libraries were prepared with Nextera adapters. MPE-seq libraries were required to be at least 26 bases long post trimming to remove any reads that come from unextended primers during reverse transcription. TruSeq3-SE.fa and NexteraPE-PE.fa came with Trimmomatic and can additionally be found in the "resources" folder of the project. Example commands:
 
 #### RNA-seq
 ```
-java -jar trimmomatic.jar SE -phred33 sc_RNA_sub_A.fastq.gz sc_RNA_A_trimmed.fastq.gz ILLUMINACLIP:TruSeq3-SE.fa:2:30:10 MINLEN:10
+java -jar trimmomatic.jar SE -phred33 sc_RNA_ds_A.fastq.gz sc_RNA_A_trim.fastq.gz ILLUMINACLIP:TruSeq3-SE.fa:2:30:10 MINLEN:10
 ```
 #### MPE-seq
 ```
-java -jar trimmomatic.jar SE -phred33 sc_MPE_A_compress.fastq.gz sc_MPE_A_trimmed.fastq.gz ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 MINLEN:26
+java -jar trimmomatic.jar SE -phred33 sc_MPE_A_compress.fastq.gz sc_MPE_A_trim.fastq.gz ILLUMINACLIP:NexteraPE-PE.fa:2:30:10 MINLEN:26
 ```
 Summary of trimming:
 
 | **Sample Name** | **Strain** | **Replicate** | **Library Preparation** | **Reads**  | **Survived** | **Dropped** | **Percent Survived** |
 |-----------------|------------|:-------------:|-------------------------|-----------:|-------------:|------------:|---------------------:|
-| sc_RNA_A        | BY4741     | A             | RNA-seq                 | 5,000,000  | 4,988,092    | 11,908      | 99.76                |
+| sc_RNA_A        | BY4741     | A             | RNA-seq                 | 5,000,000  | 4,988.092    | 11,908      | 99.76                |
 | sc_RNA_B        | BY4741     | B             | RNA-seq                 | 5,000,000  | 4,988,824    | 11,176      | 99.78                |
-| sc_MPE_A        | BY4741     | A             | MPE_seq                 | 3,645,443  | 3,642,108    | 3,335       | 99.91                |
-| sc_MPE_B        | BY4741     | B             | MPE_seq                 | 3,467,732  | 3,465,210    | 2,522       | 99.93                |
+| sc_MPE_A        | BY4741     | A             | MPE_seq                 | 3,645,443  | 3,547,620    | 97,823      | 97.32                |
+| sc_MPE_B        | BY4741     | B             | MPE_seq                 | 3,467,832  | 3,342,137    | 125,695     | 96.38                |
 
 ### Alignment
 Reads were aligned with [HISAT](https://ccb.jhu.edu/software/hisat2/index.shtml) version 2.1.0. Reads with a mapping quality of less than 5 were filtered out (they typically arise from multimapping reads). Example comand:
 ```
-hisat2 --max-intronlen 2000 --summary-file sc_RNA_A_AlignmentSummary.txt --new-summary --no-unal -p 4 -x sc_index_R64-2-1 -U sc_RNA_A_trimmed.fastq.gz | samtools view -bh -q 5 - | samtools sort - -o sc_RNA_A.bam
+hisat2 --max-intronlen 2000 --summary-file sc_RNA_A_AlignmentSummary.txt --new-summary --no-unal -p 4 -x sc_index_R64-2-1 -U sc_RNA_A_trim.fastq.gz | samtools view -bh -q 5 - | samtools sort - -o sc_RNA_A.bam
 ```
 Summary of alignment:
 
