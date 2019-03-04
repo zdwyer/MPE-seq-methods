@@ -27,7 +27,7 @@ def main(args):
 				occured.add((seq1, seq2))
 
 	with gzip.open(args.output ,'wb') as out:
-		out.write(''.join(out1))
+		out.write(''.join(out))
 
 def parseArguments():
 	parser = argparse.ArgumentParser(prog="compress_UMI", description='Filters paired fastq file such that only a single instance of each read 1/read 2 sequence combination is kept. Moves UMI to read name.', usage='%(prog)s -n <UMI_length> -1 <read_1>.fastq.gz -2 <read_2>.fastq.gz -o <output>')
