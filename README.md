@@ -9,8 +9,16 @@ This document contains the data processing and analysis done for "High-precision
 
 ## Read Processing
 
-### *Schizosaccharomyces pombe*
+### Genome and Annotation Files
 The 2.30 release of the *Schizosaccharomyces pombe* genome was downloaded from [Pombase](ftp://ftp.pombase.org/pombe/genome_sequence_and_features/).
+
+#### Build HISAT index:
+Exon and intron ranges were extracted from sp_feature_v2.30.gff3. Hisat indexes were built with intron and exon annotations (indexes available in resources/hisat_index).
+```
+
+hisat2-build --ss sp_splice_sites.txt --exon sp_exons.txt sp_genome_v2.30.fa sp_index_v2.30
+```
+
 
 ## Data Analysis
 
@@ -27,7 +35,7 @@ Exon and intron ranges were extracted from sc_feature_R64-2-1.gff. Hisat indexes
 python sc_extract_exons_for_hisat.py sc_feature_R64-2-1.gff > sc_exons.txt
 python sc_extract_introns_for_hisat.py sc_feature_R64-2-1.gff > sc_introns.txt
 
-hisat2-build --ss sc_introns.txt --exon sc_exons.txt sc_genome_R64-2-1.fa sc_index_R64-2-1
+hisat2-build --ss sc_splice_sites.txt --exon sc_exons.txt sc_genome_R64-2-1.fa sc_index_R64-2-1
 ```
 
 ### Sample Summary
