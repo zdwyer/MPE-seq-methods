@@ -1,6 +1,6 @@
 ---
 title: "High-precision detection of pre-mRNA splicing isoforms using Multiplexed Primer Extension sequencing"
-author: "Michael A Gildea, Zachary W Dwyer, and Jeffrey A Pleiss"
+author: "Michael A. Gildea, Zachary W. Dwyer, and Jeffrey A. Pleiss"
 ---
 
 This document contains the data processing and analysis done for "High-precision detection of pre-mRNA splicing isoforms using Multiplexed Primer Extension sequencing" published in Methods. Custom scripts can be found in the "scripts" folder of this project. Questions and comments can be sent to Zach Dwyer at zwd2@cornell.edu.
@@ -36,8 +36,8 @@ hisat2-build --ss sc_introns.txt --exon sc_exons.txt sc_genome_R64-2-1.fa sc_ind
 |-----------|--------------|------------|:-------------:|:-----------------------:|-----------------|-----------------|------------:|
 |[SRR7208763](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR7208763) | *S. cerevisiae* | BY4741     | A             | RNA-seq                 | 101             | sc_RNA_A        | 27,248,124  | 
 |[SRR7208770](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR7208770) | *S. cerevisiae* | BY4741     | B             | RNA-seq                 | 101             | sc_RNA_B        | 30,116,992  |
-|[ID]()         | *S. cerevisiae* | BY4741     | A             | MPE-seq                 | 60+15           | sc_MPE_A        | 4,986,024   | 
-|[ID]()         | *S. cerevisiae* | BY4741     | B             | MPE-seq                 | 60+15           | sc_MPE_B        | 5,803,915   |
+|[SRR7208774](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR7208774)         | *S. cerevisiae* | BY4741     | A             | MPE-seq                 | 60+15           | sc_MPE_A        | 4,986,024   | 
+|[SRR7208776](https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR7208776)         | *S. cerevisiae* | BY4741     | B             | MPE-seq                 | 60+15           | sc_MPE_B        | 5,803,915   |
 
 ### Downsample to 5 Million Reads
 Samples were downsampled to 5 million reads by assigning each read a random number, sorting the reads by their random number, and using the first 5 million reads. A seperate script is required for single vs. paired-end reads. All reads from sample sc_MPE_A were used since it consisted of just under 5 million reads. 
@@ -52,6 +52,7 @@ python downsample_PE.py --input_1 sc_MPE_A_R1.fastq.gz --input_2 sc_MPE_A_R2.fas
 ```
 
 ### Remove PCR Duplicates [MPE-seq Only]
+Reads that resulted from PCR duplicates will have the exact same UMI. Therefore, read 1 and read 2 will be identical. The following script leaves a single copy of identical reads.
 ```
 python compress_UMI.py -n 7 -1 sc_MPE_A_ds_R1.fastq.gz -2 sc_MPE_A_sub_R2.fastq.gz -o sc_MPE_A_compress.fastq.gz
 ```
@@ -71,7 +72,7 @@ Summary of trimming:
 
 | **Sample Name** | **Strain** | **Replicate** | **Library Preparation** | **Reads**  | **Survived** | **Dropped** | **Percent Survived** |
 |-----------------|------------|:-------------:|-------------------------|-----------:|-------------:|------------:|---------------------:|
-| sc_RNA_A        | BY4741     | A             | RNA-seq                 | 5,000,000  | 4,988.092    | 11,908      | 99.76                |
+| sc_RNA_A        | BY4741     | A             | RNA-seq                 | 5,000,000  | 4,988,092    | 11,908      | 99.76                |
 | sc_RNA_B        | BY4741     | B             | RNA-seq                 | 5,000,000  | 4,988,824    | 11,176      | 99.78                |
 | sc_MPE_A        | BY4741     | A             | MPE_seq                 | 3,645,443  | 3,547,620    | 97,823      | 97.32                |
 | sc_MPE_B        | BY4741     | B             | MPE_seq                 | 3,467,832  | 3,342,137    | 125,695     | 96.38                |
@@ -85,10 +86,10 @@ Summary of alignment:
 
 |**Sample Name** | **Strain** | **Replicate** | **Library Preparation** | **Reads**  | **Unaligned** | **1 Alignment** | **Multiple Alignments** |
 |----------------|------------|:-------------:|-------------------------|-----------:|--------------:|----------------:|------------------------:|
-| sc_RNA_A       | BY4741     | A             | RNA-seq                 | 4,988,092  | 516,491       | 4,205,157       | 266,444                 |
-| sc_RNA_B       | BY4741     | B             | RNA-seq                 | 4,988,824  | 396,795       | 4,309,588       | 282,441                 |
-| sc_MPE_A       | BY4741     | A             | MPE-seq                 | 3,642,108  | 1,235,482     | 2,350,017       | 56,609                  |
-| sc_MPE_B       | BY4741     | B             | MPE-seq                 | 3,465,210  | 1,273,973     | 2,134,673       | 56,564                  |
+| sc_RNA_A       | BY4741     | A             | RNA-seq                 | 4,988,092  | 516,496       | 4,205,212       | 266,384                 |
+| sc_RNA_B       | BY4741     | B             | RNA-seq                 | 4,988,824  | 396,801       | 4,309,605       | 282,418                 |
+| sc_MPE_A       | BY4741     | A             | MPE-seq                 | 3,547,620  | 1,222,690     | 2,272,177       | 52,753                  |
+| sc_MPE_B       | BY4741     | B             | MPE-seq                 | 3,342,137  | 1,258,167     | 2,032,509       | 51,461                  |
 
 ### Feature Counting
 Mature and premature alignments were counted with a custom script based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments either cross an exon-intron or intron-exon boundary or are completely intronic. Results can be found in the "results" folder of this project. This custom script requires the HTSeq library in python.
@@ -131,7 +132,6 @@ ggplot(sc_mpe_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
-![Figure2b_MPE](Figure2b-MPE.png)
 
 
 
@@ -158,5 +158,5 @@ ggplot(sc_rna_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
-![Figure2b_RNA](Figure2b-RNA.png)
+
 
