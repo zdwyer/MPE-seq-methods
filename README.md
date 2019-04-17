@@ -132,7 +132,7 @@ ggplot(sc_mpe_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
-![Figure2C-MPE](https://github.com/zdwyer/MPE-seq-methods/blob/master/figures/Figure2C_MPE.pdf)
+![Figure2C-MPE](figures/Figure2C_MPE.png)
 
 
 #### RNA-seq
@@ -158,5 +158,5 @@ ggplot(sc_rna_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
-![Figure2C-RNA](https://github.com/zdwyer/MPE-seq-methods/blob/master/figures/Figure2C_RNA.pdf)
+![Figure2C-RNA](figures/Figure2C_RNA.png)
 
