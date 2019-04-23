@@ -82,29 +82,21 @@ ggplot(long, aes(x=Type, y=Percent, color=Type)) +
   scale_color_manual(values=c("black", "#2166ac", "#b2182b")) +
   geom_quasirandom(na.rm=TRUE, size=.01, dodge.width = .2)
 ```
-<p align="center">
 ![Figure1B](figures/Figure1B.png)
-</p>
 
 ### Figure 1c
 
 Coefficient of Variation was calculated as: 
 
-<p align="center">
 ![](figures/Equations/Cov.png)
-</p>
 
 where &sigma; is the sample standard deviation and defined as:
 
-<p align="center">
 ![](figures/Equations/sigma.png)
-</p>
 
 and &mu; is the sample mean and defined as:
 
-<p align="center">
 ![](figures/Equations/mu.png)
-</p>
 
 ```
 # Load Libraries
@@ -145,9 +137,7 @@ ggplot(long, aes(x=Geo_Mean, y=CoV, color=Type)) +
   scale_color_manual(values=c("black", "#2166ac", "#b2182b")) +
   geom_point(size=1,,na.rm=TRUE)
 ```
-<p align="center">
 ![Figure1C](figures/Figure1C.png)
-</p>
 
 # Figure 2
 
@@ -271,9 +261,8 @@ ggplot(sc_mpe_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
-<p align="center">
 ![Figure2C-MPE](figures/Figure2C_MPE.png)
-</p>
+
 
 
 #### RNA-seq
@@ -303,6 +292,4 @@ ggplot(sc_rna_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
-<p align="center">
 ![Figure2C-RNA](figures/Figure2C_RNA.png)
-</p>
