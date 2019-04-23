@@ -1,4 +1,4 @@
-Gene	M	P
+Intron	Mature	Premature
 YAL001C;I1	262	8
 YAL003W;I1	1534	73
 YAL030W;I1	536	12
