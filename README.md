@@ -88,7 +88,7 @@ ggplot(long, aes(x=Type, y=Percent, color=Type)) +
 
 Coefficient of Variation was calculated as: 
 
-![](figures/Equations/Cov.png)
+![](figures/Equations/CoV.png)
 
 where &sigma; is the sample standard deviation and defined as:
 
