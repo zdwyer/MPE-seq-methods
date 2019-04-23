@@ -1,7 +1,7 @@
----
-title: "High-precision detection of pre-mRNA splicing isoforms using Multiplexed Primer Extension sequencing"
-author: "Michael A. Gildea, Zachary W. Dwyer, and Jeffrey A. Pleiss"
----
+
+# High-precision detection of pre-mRNA splicing isoforms using Multiplexed Primer Extension sequencing
+
+#### *Michael A. Gildea, Zachary W. Dwyer, and Jeffrey A. Pleiss*
 
 This document contains the data processing and analysis done for "High-precision detection of pre-mRNA splicing isoforms using Multiplexed Primer Extension sequencing" published in Methods. Custom scripts can be found in the "scripts" folder of this project. Questions and comments can be sent to Zach Dwyer at zwd2@cornell.edu.
 
@@ -41,8 +41,8 @@ Summary of alignment:
 
 |**Sample Name** | **Strain** | **Replicate** | **Library Preparation** | **Reads**  | **Unaligned** | **1 Alignment** | **Multiple Alignments** |
 |----------------|------------|:-------------:|-------------------------|-----------:|--------------:|----------------:|------------------------:|
-| sp_RNA_A       | JP002     | A             | RNA-seq                  |  |        |       |                  |
-| sp_RNA_B       | JP002     | B             | RNA-seq                  |  |        |       |                |
+| sp_RNA_A       | JP002     | A             | RNA-seq                  | 26,038,797 | 351,447       | 24,767,961      |  919,389                |
+| sp_RNA_B       | JP002     | B             | RNA-seq                  | 44,620,541 | 598,043       | 42,418,370      | 1,604,128               |
 
 ### Feature Counting
 Mature and premature alignments were counted with a custom script based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments either cross an exon-intron or intron-exon boundary or are completely intronic. Results can be found in the "results" folder of this project. This custom script requires the HTSeq library in python.
@@ -53,6 +53,8 @@ python feature_counts_fig1.py -i sp_RNA_A.bam -f sp_feature_ranges.bed > sp_RNA_
 ## Analysis
 
 Data were processed in R with the following scripts:
+
+Aesthetic modifications to axis titles were performed in Illustrator
 
 ### Figure 1b
 ```
@@ -68,7 +70,7 @@ options(scipen=999)
 # Read data from sp_rna_A into R, convert raw counts to percentages
 sp_rna_counts_A = read.delim('data/counts/sp_RNA_A_counts.txt', header=TRUE) %>% mutate(Total=Exonic+Mature+Premature, Exonic=Exonic/Total, Mature=Mature/Total, Premature=Premature/Total)
 
-# Covert "wide" table to "long" table for ease of graphing with R
+# Covert "wide" table format to "long" table format for ease of graphing with ggplot
 long = gather(sp_rna_counts_A %>% select(-Total), Type, Percent, Exonic:Premature, factor_key=TRUE)
 
 # Plot
@@ -80,9 +82,29 @@ ggplot(long, aes(x=Type, y=Percent, color=Type)) +
   scale_color_manual(values=c("black", "#2166ac", "#b2182b")) +
   geom_quasirandom(na.rm=TRUE, size=.01, dodge.width = .2)
 ```
+<p align="center">
 ![Figure1B](figures/Figure1B.png)
+</p>
 
 ### Figure 1c
+
+Coefficient of Variation was calculated as: 
+
+<p align="center">
+![](figures/Equations/Cov.png)
+</p>
+
+where &sigma; is the sample standard deviation and defined as:
+
+<p align="center">
+![](figures/Equations/sigma.png)
+</p>
+
+and &mu; is the sample mean and defined as:
+
+<p align="center">
+![](figures/Equations/mu.png)
+</p>
 
 ```
 # Load Libraries
@@ -108,7 +130,7 @@ sp_rna_counts = merge(sp_rna_counts_A, sp_rna_counts_B, by="Gene", suffixes=c("_
          Mature_CoV= sqrt((Mature_A-Mature_Amean)^2 + (Mature_B-Mature_Amean)^2)/Mature_Amean,
          Premature_CoV= sqrt((Premature_A-Premature_Amean)^2 + (Premature_B-Premature_Amean)^2)/Premature_Amean)
 
-# Covert from "wide" table format to "long" table format for ease of graphing with R
+# Covert from "wide" table format to "long" table format for ease of graphing with ggplot
 long = rbind(
     sp_rna_counts %>% select(Gene, Exonic_Gmean, Exonic_CoV) %>% rename(Geo_Mean=Exonic_Gmean, CoV=Exonic_CoV) %>% mutate(Type='Exonic'),
     sp_rna_counts %>% select(Gene, Mature_Gmean, Mature_CoV) %>% rename(Geo_Mean=Mature_Gmean, CoV=Mature_CoV) %>% mutate(Type='Mature'),
@@ -123,7 +145,9 @@ ggplot(long, aes(x=Geo_Mean, y=CoV, color=Type)) +
   scale_color_manual(values=c("black", "#2166ac", "#b2182b")) +
   geom_point(size=1,,na.rm=TRUE)
 ```
+<p align="center">
 ![Figure1C](figures/Figure1C.png)
+</p>
 
 # Figure 2
 
@@ -247,7 +271,9 @@ ggplot(sc_mpe_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
+<p align="center">
 ![Figure2C-MPE](figures/Figure2C_MPE.png)
+</p>
 
 
 #### RNA-seq
@@ -277,4 +303,6 @@ ggplot(sc_rna_counts, aes(x=SI_A, y=SI_B)) +
           scale_y_continuous(limits=c(-4,3)) +
           geom_point(size=1)
 ```
+<p align="center">
 ![Figure2C-RNA](figures/Figure2C_RNA.png)
+</p>
