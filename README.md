@@ -47,7 +47,7 @@ Summary of alignment:
 ### Feature Counting
 Mature and premature alignments were counted with a custom script based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments either cross an exon-intron or intron-exon boundary or are completely intronic. Results can be found in the "results" folder of this project. This custom script requires the HTSeq library in python.
 ```
-python feature_counts_fig1.py -i sp_RNA_A.bam -f sp_feature_ranges.bed > sp_RNA_A_counts.txt
+python feature_counts_fig1.py -i sp_RNA_A.bam -f sp_single_intron_features.bed > sp_RNA_A_counts.txt
 ```
 
 ## Analysis
