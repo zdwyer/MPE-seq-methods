@@ -4,6 +4,7 @@ from collections import defaultdict
 def main(args):
  
 	counts = {}
+	problem = 0
 
 	features = HTSeq.GenomicArrayOfSets("auto", stranded=False)
 	for line in open(args.feature_ranges):
@@ -40,7 +41,7 @@ def main(args):
 					pieces = set()
 					for i in feat:
 						pieces.add(i.split(';')[1])
-					if 'I1' in pieces:
+					if 'I1' in pieces and ('E1' in pieces or 'E2' in pieces):
 						counts[gene]['Premature'] += 1
 					elif 'E1' in pieces or 'E2' in pieces:
 						counts[gene]['Exonic'] += 1
@@ -50,10 +51,10 @@ def main(args):
 		print '%s\t%d\t%d\t%d' % (gene, counts[gene]['Exonic'], counts[gene]['Mature'], counts[gene]['Premature'])
 
 def parseArguments():
-	parser = argparse.ArgumentParser(prog="", description='Counts the number of reads that are completely exonic, cross junctions, or cross an intron exon boundary.', usage='%(prog)s [options]')
+	parser = argparse.ArgumentParser(prog="", description='', usage='%(prog)s [options]')
 	required = parser.add_argument_group('required arguments')
 	required.add_argument('-i', '--input_file', required=True, help=' Input alignment file. (.bam)', metavar='', dest='input_file')
-	required.add_argument('-f', '--features', required=True, help=' Ranges of all exons and introns to be counted. (.bed)', metavar='', dest='feature_ranges')
+	required.add_argument('-f', '--features', required=True, help=' Feature ranges. (.bed)', metavar='', dest='feature_ranges')
 	return parser.parse_args()
 
 args = parseArguments()
