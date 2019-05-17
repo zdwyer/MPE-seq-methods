@@ -45,7 +45,7 @@ Summary of alignment:
 | sp_RNA_B       | JP002     | B             | RNA-seq                  | 44,620,541 | 598,043       | 42,418,370      | 1,604,128               |
 
 ### Feature Counting
-Mature and premature alignments were counted with a custom script based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments either cross an exon-intron or intron-exon boundary or are completely intronic. Results can be found in the "results" folder of this project. This custom script requires the HTSeq library in python.
+Mature and premature alignments were counted with a custom script based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments either cross an exon-intron or intron-exon boundary. Results can be found in the "results" folder of this project. This custom script requires the HTSeq library in python.
 ```
 python feature_counts_fig1.py -i sp_RNA_A.bam -f sp_single_intron_features.bed > sp_RNA_A_counts.txt
 ```
@@ -217,7 +217,7 @@ Summary of alignment:
 | sc_MPE_B       | BY4741     | B             | MPE-seq                 | 3,342,137  | 1,258,167     | 2,032,509       | 51,461                  |
 
 ### Feature Counting
-Mature and premature alignments were counted with a custom script based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments either cross an exon-intron or intron-exon boundary or are completely intronic. Results can be found in the "results" folder of this project. This custom script requires the HTSeq library in python.
+Mature and premature alignments were counted with a custom script based off of [HTSeq-count](https://htseq.readthedocs.io/en/release_0.11.1/count.html). Mature alignments are those that cross an exon-exon junction. Premature alignments either cross an exon-intron or intron-exon boundary. Results can be found in the "results" folder of this project. This custom script requires the HTSeq library in python.
 ```
 python feature_counts_fig2.py -i sc_RNA_A.bam -f sc_intron_ranges.bed > sc_RNA_A_counts.txt
 ```
