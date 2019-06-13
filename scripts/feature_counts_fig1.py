@@ -15,16 +15,18 @@ def main(args):
 
 	for alignment in HTSeq.BAM_Reader(args.input_file):
 		
+
 		feat = set()
 		junctions = set()
 
-		for cigop in alignment.cigar:
+		for i, cigop in enumerate(alignment.cigar):
 			if cigop.type == 'M':
 				for iv, val in features[cigop.ref_iv].steps():
 					feat |= val
 			elif cigop.type == 'N':
-				for iv, val in features[cigop.ref_iv].steps():
-					junctions |= val
+				if alignment.cigar[i-1].type =='M' and alignment.cigar[i-1].size > 3 and alignment.cigar[i+1].type =='M' and alignment.cigar[i+1].size > 3:
+					for iv, val in features[cigop.ref_iv].steps():
+						junctions |= val
 
 		candidate_genes = set()
 		for i in feat:
