@@ -259,7 +259,7 @@ ggplot(sc_mpe_counts, aes(x=SI_A, y=SI_B)) +
           theme(panel.grid = element_blank()) +
           scale_x_continuous(limits=c(-4,3)) +
           scale_y_continuous(limits=c(-4,3)) +
-          geom_point(size=1)
+          geom_point(size=1) 
 ```
 ![Figure2C-MPE](figures/Figure2C_MPE.png)
 
