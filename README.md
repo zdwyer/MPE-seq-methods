@@ -1,9 +1,9 @@
 
-# High-precision detection of pre-mRNA splicing isoforms using Multiplexed Primer Extension sequencing
+# Multiplexed primer extension sequencing: A targeted RNA-seq method that enables high-precision quantitation of mRNA splicing isoforms and rare pre-mRNA splicing intermediates
 
 #### *Michael A. Gildea, Zachary W. Dwyer, and Jeffrey A. Pleiss*
 
-This document contains the data processing and analysis done for "High-precision detection of pre-mRNA splicing isoforms using Multiplexed Primer Extension sequencing" published in Methods. Custom scripts can be found in the "scripts" folder of this project. Questions and comments can be sent to Zach Dwyer at zwd2@cornell.edu.
+This document contains the data processing and analysis done for "[Multiplexed primer extension sequencing: A targeted RNA-seq method that enables high-precision quantitation of mRNA splicing isoforms and rare pre-mRNA splicing intermediates](https://www.ncbi.nlm.nih.gov/pubmed/31121301)" published in Methods. Custom scripts can be found in the "scripts" folder of this project. Questions and comments can be sent to Zach Dwyer at zwd2@cornell.edu.
 
 # Figure 1
 
